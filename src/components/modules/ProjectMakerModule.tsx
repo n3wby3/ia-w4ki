@@ -3,58 +3,23 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { 
   Lightbulb, 
   Users, 
   Target, 
   FileText, 
   Plus,
-  Search,
-  Filter,
-  Star,
-  TrendingUp
+  TrendingUp,
+  Brain,
+  Rocket
 } from "lucide-react";
+import { OpportunityExplorer } from "./project-maker/OpportunityExplorer";
+import { ProjectGenerator } from "./project-maker/ProjectGenerator";
+
+type ActiveTab = 'explorer' | 'generator' | 'projects';
 
 export const ProjectMakerModule = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const mockOpportunities = [
-    {
-      id: 1,
-      title: "Exportación de Palta Hass",
-      description: "Oportunidad en mercado asiático para productores de Tacna",
-      sector: "Agricultura",
-      investment: "50,000 USD",
-      roi: "180%",
-      timeline: "6 meses",
-      difficulty: "Medio",
-      matching: 92
-    },
-    {
-      id: 2,
-      title: "Plataforma E-commerce Fronteriza",
-      description: "Marketplace digital para comercio Arica-Tacna",
-      sector: "Tecnología",
-      investment: "25,000 USD",
-      roi: "250%",
-      timeline: "3 meses",
-      difficulty: "Alto",
-      matching: 78
-    },
-    {
-      id: 3,
-      title: "Turismo Gastronómico Binacional",
-      description: "Ruta culinaria que conecte ambas ciudades",
-      sector: "Turismo",
-      investment: "15,000 USD",
-      roi: "145%",
-      timeline: "4 meses",
-      difficulty: "Bajo",
-      matching: 85
-    }
-  ];
+  const [activeTab, setActiveTab] = useState<ActiveTab>('explorer');
 
   const mockProjects = [
     {
@@ -63,7 +28,9 @@ export const ProjectMakerModule = () => {
       status: "En desarrollo",
       progress: 65,
       owner: "María González",
-      deadline: "2024-03-15"
+      deadline: "2024-03-15",
+      investment: "45,000 USD",
+      sector: "Agricultura"
     },
     {
       id: 2,
@@ -71,9 +38,87 @@ export const ProjectMakerModule = () => {
       status: "Validación",
       progress: 30,
       owner: "Carlos Mendoza",
-      deadline: "2024-02-28"
+      deadline: "2024-02-28",
+      investment: "25,000 USD",
+      sector: "Fintech"
+    },
+    {
+      id: 3,
+      title: "Ruta Gastronómica MRA",
+      status: "Propuesta",
+      progress: 15,
+      owner: "Ana Flores",
+      deadline: "2024-04-10",
+      investment: "15,000 USD",
+      sector: "Turismo"
     }
   ];
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'explorer':
+        return <OpportunityExplorer />;
+      case 'generator':
+        return <ProjectGenerator />;
+      case 'projects':
+        return (
+          <Card>
+            <CardHeader>
+              <CardTitle>Mis Proyectos</CardTitle>
+              <CardDescription>
+                Proyectos en desarrollo y validación
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {mockProjects.map((project) => (
+                  <div key={project.id} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                    <div className="flex items-center justify-between mb-3">
+                      <div>
+                        <div className="flex items-center space-x-2 mb-1">
+                          <h3 className="font-semibold">{project.title}</h3>
+                          <Badge variant="outline">{project.sector}</Badge>
+                        </div>
+                        <p className="text-sm text-gray-600">Por {project.owner}</p>
+                      </div>
+                      <div className="text-right">
+                        <Badge variant={
+                          project.status === 'En desarrollo' ? 'default' : 
+                          project.status === 'Validación' ? 'secondary' : 'outline'
+                        }>
+                          {project.status}
+                        </Badge>
+                        <div className="text-sm text-gray-600 mt-1">{project.investment}</div>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span>Progreso</span>
+                        <span>{project.progress}%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-blue-500 h-2 rounded-full transition-all" 
+                          style={{ width: `${project.progress}%` }}
+                        ></div>
+                      </div>
+                      <div className="flex justify-between text-xs text-gray-500">
+                        <span>Fecha límite: {project.deadline}</span>
+                        <Button variant="ghost" size="sm">
+                          Ver Proyecto
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -88,7 +133,7 @@ export const ProjectMakerModule = () => {
         </div>
         <Button>
           <Plus className="w-4 h-4 mr-2" />
-          Crear Proyecto
+          Nuevo Proyecto
         </Button>
       </div>
 
@@ -98,13 +143,13 @@ export const ProjectMakerModule = () => {
           <CardHeader className="pb-2">
             <CardDescription className="flex items-center">
               <Target className="w-4 h-4 mr-1" />
-              Oportunidades
+              Oportunidades IA
             </CardDescription>
             <CardTitle className="text-2xl">47</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-xs text-green-600">
-              +12 esta semana
+              +12 detectadas esta semana
             </div>
           </CardContent>
         </Card>
@@ -119,7 +164,7 @@ export const ProjectMakerModule = () => {
           </CardHeader>
           <CardContent>
             <div className="text-xs text-blue-600">
-              87% de precisión
+              87% de precisión IA
             </div>
           </CardContent>
         </Card>
@@ -128,13 +173,13 @@ export const ProjectMakerModule = () => {
           <CardHeader className="pb-2">
             <CardDescription className="flex items-center">
               <FileText className="w-4 h-4 mr-1" />
-              Propuestas
+              Propuestas Generadas
             </CardDescription>
             <CardTitle className="text-2xl">156</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-xs text-purple-600">
-              +8 en desarrollo
+              +8 esta semana
             </div>
           </CardContent>
         </Card>
@@ -149,138 +194,39 @@ export const ProjectMakerModule = () => {
           </CardHeader>
           <CardContent>
             <div className="text-xs text-green-600">
-              +15% vs trimestre anterior
+              Proyecciones IA validadas
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Search and Filters */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Explorar Oportunidades</CardTitle>
-          <CardDescription>
-            Encuentra oportunidades de negocio personalizadas
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex space-x-4 mb-6">
-            <div className="flex-1">
-              <Label htmlFor="search">Buscar oportunidades</Label>
-              <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                <Input
-                  id="search"
-                  placeholder="Ej: agricultura, tecnología, exportación..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-            </div>
-            <Button variant="outline">
-              <Filter className="w-4 h-4 mr-2" />
-              Filtros
-            </Button>
-          </div>
+      {/* Navigation Tabs */}
+      <div className="flex space-x-2">
+        <Button 
+          variant={activeTab === 'explorer' ? 'default' : 'outline'}
+          onClick={() => setActiveTab('explorer')}
+        >
+          <Target className="w-4 h-4 mr-2" />
+          Explorar Oportunidades
+        </Button>
+        <Button 
+          variant={activeTab === 'generator' ? 'default' : 'outline'}
+          onClick={() => setActiveTab('generator')}
+        >
+          <Brain className="w-4 h-4 mr-2" />
+          Generador IA
+        </Button>
+        <Button 
+          variant={activeTab === 'projects' ? 'default' : 'outline'}
+          onClick={() => setActiveTab('projects')}
+        >
+          <Rocket className="w-4 h-4 mr-2" />
+          Mis Proyectos
+        </Button>
+      </div>
 
-          <div className="space-y-4">
-            {mockOpportunities.map((opportunity) => (
-              <div key={opportunity.id} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <h3 className="font-semibold">{opportunity.title}</h3>
-                      <Badge variant="outline">{opportunity.sector}</Badge>
-                      <div className="flex items-center space-x-1">
-                        <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                        <span className="text-sm font-medium">{opportunity.matching}%</span>
-                      </div>
-                    </div>
-                    <p className="text-gray-600 text-sm mb-3">{opportunity.description}</p>
-                    <div className="grid grid-cols-4 gap-4 text-sm">
-                      <div>
-                        <span className="text-gray-500">Inversión:</span>
-                        <div className="font-medium">{opportunity.investment}</div>
-                      </div>
-                      <div>
-                        <span className="text-gray-500">ROI Estimado:</span>
-                        <div className="font-medium text-green-600">{opportunity.roi}</div>
-                      </div>
-                      <div>
-                        <span className="text-gray-500">Timeline:</span>
-                        <div className="font-medium">{opportunity.timeline}</div>
-                      </div>
-                      <div>
-                        <span className="text-gray-500">Dificultad:</span>
-                        <Badge variant={
-                          opportunity.difficulty === 'Bajo' ? 'default' : 
-                          opportunity.difficulty === 'Medio' ? 'secondary' : 'destructive'
-                        }>
-                          {opportunity.difficulty}
-                        </Badge>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex space-x-2">
-                    <Button variant="outline" size="sm">
-                      Ver Detalles
-                    </Button>
-                    <Button size="sm">
-                      Aplicar
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* My Projects */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Mis Proyectos</CardTitle>
-          <CardDescription>
-            Proyectos en desarrollo y validación
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {mockProjects.map((project) => (
-              <div key={project.id} className="border rounded-lg p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <div>
-                    <h3 className="font-semibold">{project.title}</h3>
-                    <p className="text-sm text-gray-600">Por {project.owner}</p>
-                  </div>
-                  <Badge variant={project.status === 'En desarrollo' ? 'default' : 'secondary'}>
-                    {project.status}
-                  </Badge>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>Progreso</span>
-                    <span>{project.progress}%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="bg-blue-500 h-2 rounded-full transition-all" 
-                      style={{ width: `${project.progress}%` }}
-                    ></div>
-                  </div>
-                  <div className="flex justify-between text-xs text-gray-500">
-                    <span>Fecha límite: {project.deadline}</span>
-                    <Button variant="ghost" size="sm">
-                      Ver Proyecto
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      {/* Tab Content */}
+      {renderTabContent()}
     </div>
   );
 };
