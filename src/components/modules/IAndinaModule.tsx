@@ -2,60 +2,114 @@
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { 
-  Brain, 
-  TrendingUp, 
-  Database, 
-  Globe, 
-  RefreshCw,
-  Eye,
-  Download
-} from "lucide-react";
+import { RefreshCw } from "lucide-react";
+import { IAndinaStats } from "./iandina/IAndinaStats";
+import { OpportunityCard, Opportunity } from "./iandina/OpportunityCard";
+import { AIProcessor } from "./iandina/AIProcessor";
+import { DataSources } from "./iandina/DataSources";
+import { useToast } from "@/hooks/use-toast";
 
 export const IAndinaModule = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const { toast } = useToast();
 
-  const mockData = [
+  // Stats data
+  const stats = {
+    activeSources: 12,
+    aiAnalyses: 1247,
+    accuracy: 87,
+    coverage: 100
+  };
+
+  // Enhanced mock opportunities with AI analysis data
+  const opportunities: Opportunity[] = [
     {
       id: 1,
-      title: "Incremento en exportación de quinua",
-      description: "Análisis detecta oportunidad en el mercado de superalimentos",
+      title: "Incremento en exportación de quinua orgánica",
+      description: "Análisis de IA detecta creciente demanda en mercados europeos para quinua certificada de la región andina",
       category: "Agricultura",
       confidence: 92,
       region: "Tacna",
       date: "2024-01-15",
-      impact: "Alto"
+      impact: "Alto",
+      sentiment: "positive",
+      keywords: ["quinua", "orgánico", "exportación", "europa", "certificación"],
+      source: "SUNAT Analytics"
     },
     {
       id: 2,
-      title: "Nueva normativa aduanera",
-      description: "Cambios regulatorios que facilitan el comercio textil",
+      title: "Nueva normativa aduanera facilita comercio textil",
+      description: "Cambios regulatorios identificados por IA reducen barreras para intercambio comercial transfronterizo",
       category: "Regulación",
       confidence: 85,
       region: "Arica",
       date: "2024-01-14",
-      impact: "Medio"
+      impact: "Medio",
+      sentiment: "positive",
+      keywords: ["aduanas", "textil", "regulación", "comercio", "frontera"],
+      source: "Diario Oficial"
     },
     {
       id: 3,
-      title: "Demanda de tecnología limpia",
-      description: "Creciente interés en soluciones energéticas sostenibles",
+      title: "Creciente demanda de tecnología limpia",
+      description: "Procesamiento de noticias revela interés regional en soluciones energéticas sostenibles",
       category: "Tecnología",
       confidence: 78,
       region: "Binacional",
       date: "2024-01-13",
-      impact: "Alto"
+      impact: "Alto",
+      sentiment: "positive",
+      keywords: ["tecnología", "energía", "sostenible", "innovación", "limpia"],
+      source: "La Estrella de Arica"
     }
   ];
 
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
     setIsAnalyzing(true);
-    setTimeout(() => setIsAnalyzing(false), 3000);
+    
+    // Simulate AI analysis process
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    
+    setIsAnalyzing(false);
+    toast({
+      title: "Análisis completado",
+      description: "Se han procesado 156 nuevas fuentes de datos.",
+    });
+  };
+
+  const handleRefreshSources = async () => {
+    setIsRefreshing(true);
+    
+    // Simulate data refresh
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    setIsRefreshing(false);
+    toast({
+      title: "Fuentes actualizadas",
+      description: "Todas las fuentes de datos han sido sincronizadas.",
+    });
+  };
+
+  const handleViewOpportunity = (id: number) => {
+    const opportunity = opportunities.find(o => o.id === id);
+    toast({
+      title: "Oportunidad seleccionada",
+      description: `Visualizando: ${opportunity?.title}`,
+    });
+  };
+
+  const handleDownloadOpportunity = (id: number) => {
+    const opportunity = opportunities.find(o => o.id === id);
+    toast({
+      title: "Descarga iniciada",
+      description: `Generando reporte para: ${opportunity?.title}`,
+    });
   };
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
@@ -71,162 +125,39 @@ export const IAndinaModule = () => {
         </Button>
       </div>
 
-      {/* Status Cards */}
-      <div className="grid md:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription className="flex items-center">
-              <Database className="w-4 h-4 mr-1" />
-              Fuentes Activas
-            </CardDescription>
-            <CardTitle className="text-2xl">12</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-xs text-green-600">
-              ✓ Todas las fuentes operativas
-            </div>
-          </CardContent>
-        </Card>
+      {/* Stats Cards */}
+      <IAndinaStats stats={stats} />
 
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription className="flex items-center">
-              <Brain className="w-4 h-4 mr-1" />
-              Análisis IA
-            </CardDescription>
-            <CardTitle className="text-2xl">1,247</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-xs text-blue-600">
-              +15 en las últimas 24h
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription className="flex items-center">
-              <TrendingUp className="w-4 h-4 mr-1" />
-              Precisión
-            </CardDescription>
-            <CardTitle className="text-2xl">87%</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-xs text-green-600">
-              +2% vs mes anterior
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription className="flex items-center">
-              <Globe className="w-4 h-4 mr-1" />
-              Cobertura
-            </CardDescription>
-            <CardTitle className="text-2xl">100%</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-xs text-blue-600">
-              Arica-Tacna completo
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      {/* AI Processor */}
+      <AIProcessor />
 
       {/* Recent Analysis */}
       <Card>
         <CardHeader>
-          <CardTitle>Análisis Recientes</CardTitle>
+          <CardTitle>Oportunidades Detectadas por IA</CardTitle>
           <CardDescription>
-            Oportunidades detectadas por el motor de IA
+            Análisis automático de fuentes de datos regionales
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {mockData.map((item) => (
-              <div key={item.id} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <h3 className="font-semibold">{item.title}</h3>
-                      <Badge variant="outline">{item.category}</Badge>
-                      <Badge 
-                        variant={item.impact === 'Alto' ? 'default' : 'secondary'}
-                        className={item.impact === 'Alto' ? 'bg-red-100 text-red-800' : ''}
-                      >
-                        {item.impact}
-                      </Badge>
-                    </div>
-                    <p className="text-gray-600 text-sm mb-2">{item.description}</p>
-                    <div className="flex items-center space-x-4 text-xs text-gray-500">
-                      <span>📍 {item.region}</span>
-                      <span>📅 {item.date}</span>
-                      <span>🎯 Confianza: {item.confidence}%</span>
-                    </div>
-                  </div>
-                  <div className="flex space-x-2">
-                    <Button variant="outline" size="sm">
-                      <Eye className="w-4 h-4" />
-                    </Button>
-                    <Button variant="outline" size="sm">
-                      <Download className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
+            {opportunities.map((opportunity) => (
+              <OpportunityCard
+                key={opportunity.id}
+                opportunity={opportunity}
+                onView={handleViewOpportunity}
+                onDownload={handleDownloadOpportunity}
+              />
             ))}
           </div>
         </CardContent>
       </Card>
 
       {/* Data Sources */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Fuentes de Datos</CardTitle>
-          <CardDescription>
-            Monitoreo automático de múltiples fuentes
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="space-y-3">
-              <h4 className="font-medium">Datos Comerciales</h4>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span>SUNAT Perú</span>
-                  <span className="text-green-600">✓ Activo</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Aduanas Chile</span>
-                  <span className="text-green-600">✓ Activo</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Banco Central Chile</span>
-                  <span className="text-green-600">✓ Activo</span>
-                </div>
-              </div>
-            </div>
-            <div className="space-y-3">
-              <h4 className="font-medium">Medios Locales</h4>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span>La Estrella de Arica</span>
-                  <span className="text-green-600">✓ Activo</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Correo Tacna</span>
-                  <span className="text-green-600">✓ Activo</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>El Pueblo Tacna</span>
-                  <span className="text-yellow-600">⚠ Intermitente</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <DataSources 
+        onRefresh={handleRefreshSources}
+        isRefreshing={isRefreshing}
+      />
     </div>
   );
 };
