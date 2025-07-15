@@ -13,7 +13,7 @@ import {
   Zap
 } from "lucide-react";
 import { IAndinaStats } from "./iandina/IAndinaStats";
-import { OpportunityCard } from "./iandina/OpportunityCard";
+import { OpportunityCard, type Opportunity } from "./iandina/OpportunityCard";
 import { AIProcessor } from "./iandina/AIProcessor";
 import { DataSources } from "./iandina/DataSources";
 import { DataScrapingService } from "../../services/DataScrapingService";
@@ -23,6 +23,7 @@ type ActiveTab = 'dashboard' | 'analysis' | 'sources' | 'processor';
 export const IAndinaModule = () => {
   const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isRefreshingSources, setIsRefreshingSources] = useState(false);
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
   const [realTimeData, setRealTimeData] = useState({
     newsCount: 0,
@@ -30,6 +31,14 @@ export const IAndinaModule = () => {
     sentimentScore: 0,
     alerts: 0
   });
+
+  // Stats data for IAndinaStats component
+  const statsData = {
+    activeSources: 24,
+    aiAnalyses: 1247,
+    accuracy: 94,
+    coverage: 98
+  };
 
   useEffect(() => {
     // Simular actualización en tiempo real
@@ -72,39 +81,65 @@ export const IAndinaModule = () => {
     }
   };
 
-  const mockOpportunities = [
+  const handleRefreshSources = async () => {
+    setIsRefreshingSources(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Simulate data refresh
+    } finally {
+      setIsRefreshingSources(false);
+    }
+  };
+
+  const handleViewOpportunity = (id: number) => {
+    console.log('Viewing opportunity:', id);
+    // Implement view logic
+  };
+
+  const handleDownloadOpportunity = (id: number) => {
+    console.log('Downloading opportunity:', id);
+    // Implement download logic
+  };
+
+  const mockOpportunities: Opportunity[] = [
     {
       id: 1,
       title: "Exportación Quinoa Premium",
-      confidence: 0.92,
-      sector: "Agricultura",
-      investment: 85000,
-      roi: "220%",
+      description: "Oportunidad de exportación de quinoa orgánica con certificación premium hacia mercados europeos emergentes.",
+      category: "Agricultura",
+      confidence: 92,
       region: "Tacna",
-      aiSource: "Análisis de 15 fuentes + tendencias comerciales",
-      riskLevel: "Medio"
+      date: "2024-01-15",
+      impact: "Alto",
+      sentiment: "positive",
+      keywords: ["quinoa", "exportación", "orgánico", "premium", "europa"],
+      source: "Análisis IA + 15 fuentes comerciales"
     },
     {
       id: 2,
       title: "Hub Logístico Inteligente",
-      confidence: 0.87,
-      sector: "Logística",
-      investment: 150000,
-      roi: "185%",
+      description: "Desarrollo de centro logístico con tecnología IoT para optimizar flujos comerciales binacionales.",
+      category: "Logística",
+      confidence: 87,
       region: "Arica",
-      aiSource: "Scraping gubernamental + análisis de flujos",
-      riskLevel: "Alto"
+      date: "2024-01-14",
+      impact: "Alto",
+      sentiment: "positive",
+      keywords: ["logística", "IoT", "hub", "comercio", "tecnología"],
+      source: "Scraping gubernamental + análisis flujos"
     },
     {
       id: 3,
       title: "Plataforma Agtech",
-      confidence: 0.89,
-      sector: "Tecnología",
-      investment: 65000,
-      roi: "280%",
+      description: "Plataforma digital para conectar productores locales con mercados internacionales usando IA predictiva.",
+      category: "Tecnología",
+      confidence: 89,
       region: "Binacional",
-      aiSource: "Procesamiento NLP + detección de patrones",
-      riskLevel: "Medio"
+      date: "2024-01-13",
+      impact: "Medio",
+      sentiment: "positive",
+      keywords: ["agtech", "plataforma", "IA", "productores", "digital"],
+      source: "Procesamiento NLP + detección patrones"
     }
   ];
 
@@ -113,7 +148,7 @@ export const IAndinaModule = () => {
       case 'dashboard':
         return (
           <div className="space-y-6">
-            <IAndinaStats />
+            <IAndinaStats stats={statsData} />
             
             <div className="grid md:grid-cols-2 gap-6">
               <Card>
@@ -214,7 +249,12 @@ export const IAndinaModule = () => {
               <CardContent>
                 <div className="space-y-4">
                   {mockOpportunities.map((opportunity) => (
-                    <OpportunityCard key={opportunity.id} opportunity={opportunity} />
+                    <OpportunityCard 
+                      key={opportunity.id} 
+                      opportunity={opportunity}
+                      onView={handleViewOpportunity}
+                      onDownload={handleDownloadOpportunity}
+                    />
                   ))}
                 </div>
               </CardContent>
@@ -224,7 +264,12 @@ export const IAndinaModule = () => {
       case 'analysis':
         return <AIProcessor />;
       case 'sources':
-        return <DataSources />;
+        return (
+          <DataSources 
+            onRefresh={handleRefreshSources}
+            isRefreshing={isRefreshingSources}
+          />
+        );
       case 'processor':
         return <AIProcessor />;
       default:
