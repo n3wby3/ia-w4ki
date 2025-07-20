@@ -3,31 +3,50 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Brain, 
-  Lightbulb, 
-  FileText, 
-  LogOut, 
-  TrendingUp, 
-  Users, 
+import {
+  Brain,
+  Lightbulb,
+  FileText,
+  LogOut,
+  TrendingUp,
+  Users,
   Bell,
   Settings,
-  BarChart3
+  BarChart3,
+  Building,
+  Handshake,
+  DollarSign,
+  Gem,
+  Database,
+  ListChecks,
+  AreaChart
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { IAndinaModule } from "./modules/IAndinaModule";
 import { ProjectMakerModule } from "./modules/ProjectMakerModule";
 import { DigestModule } from "./modules/DigestModule";
-import { UserManagementModule } from "./modules/UserManagementModule";
-import { SponsorshipModule } from "./modules/SponsorshipModule";
-import { FreemiumModule } from "./modules/FreemiumModule";
-import { DataIntegrationModule } from "./modules/DataIntegrationModule";
-import { ProjectTrackingModule } from "./modules/ProjectTrackingModule";
-import { InstitutionalValidationModule } from "./modules/InstitutionalValidationModule";
-import { CollaborationModule } from "./modules/CollaborationModule";
-import { AdvancedReportsModule } from "./modules/AdvancedReportsModule";
+import UserManagementModuleV2 from "./modulesV2/UserManagementModuleV2";
+import SponsorshipModuleV2 from "./modulesV2/SponsorshipModuleV2";
+import FreemiumModuleV2 from "./modulesV2/FreemiumModuleV2";
+import DataIntegrationModuleV2 from "./modulesV2/DataIntegrationModuleV2";
+import ProjectTrackingModuleV2 from "./modulesV2/ProjectTrackingModuleV2";
+import InstitutionalValidationModuleV2 from "./modulesV2/InstitutionalValidationModuleV2";
+import CollaborationModuleV2 from "./modulesV2/CollaborationModuleV2";
+import AdvancedReportsModuleV2 from "./modulesV2/AdvancedReportsModuleV2";
 
-type ActiveModule = 'dashboard' | 'iandina' | 'project-maker' | 'digest' | 'users' | 'sponsors' | 'freemium' | 'integration' | 'tracking' | 'validation' | 'collaboration' | 'reports';
+type ActiveModule =
+  | 'dashboard'
+  | 'iandina'
+  | 'project-maker'
+  | 'digest'
+  | 'user-management'
+  | 'sponsorship'
+  | 'freemium'
+  | 'data-integration'
+  | 'project-tracking'
+  | 'institutional-validation'
+  | 'collaboration'
+  | 'advanced-reports';
 
 export const Dashboard = () => {
   const { user, logout } = useAuth();
@@ -44,30 +63,18 @@ export const Dashboard = () => {
 
   const renderModule = () => {
     switch (activeModule) {
-      case 'iandina':
-        return <IAndinaModule />;
-      case 'project-maker':
-        return <ProjectMakerModule />;
-      case 'digest':
-        return <DigestModule />;
-      case 'users':
-        return <UserManagementModule />;
-      case 'sponsors':
-        return <SponsorshipModule />;
-      case 'freemium':
-        return <FreemiumModule />;
-      case 'integration':
-        return <DataIntegrationModule />;
-      case 'tracking':
-        return <ProjectTrackingModule />;
-      case 'validation':
-        return <InstitutionalValidationModule />;
-      case 'collaboration':
-        return <CollaborationModule />;
-      case 'reports':
-        return <AdvancedReportsModule />;
-      default:
-        return <DashboardHome />;
+      case 'iandina': return <IAndinaModule />;
+      case 'project-maker': return <ProjectMakerModule />;
+      case 'digest': return <DigestModule />;
+      case 'user-management': return <UserManagementModuleV2 />;
+      case 'sponsorship': return <SponsorshipModuleV2 />;
+      case 'freemium': return <FreemiumModuleV2 />;
+      case 'data-integration': return <DataIntegrationModuleV2 />;
+      case 'project-tracking': return <ProjectTrackingModuleV2 />;
+      case 'institutional-validation': return <InstitutionalValidationModuleV2 />;
+      case 'collaboration': return <CollaborationModuleV2 />;
+      case 'advanced-reports': return <AdvancedReportsModuleV2 />;
+      default: return <DashboardHome />;
     }
   };
 
@@ -107,7 +114,7 @@ export const Dashboard = () => {
       <div className="flex">
         {/* Sidebar */}
         <aside className="w-64 bg-white border-r min-h-screen">
-          <nav className="p-4 space-y-2">
+          <nav className="p-4 space-y-1">
             <Button
               variant={activeModule === 'dashboard' ? 'default' : 'ghost'}
               className="w-full justify-start"
@@ -117,32 +124,56 @@ export const Dashboard = () => {
               Dashboard
             </Button>
             
-            <Button
-              variant={activeModule === 'iandina' ? 'default' : 'ghost'}
-              className="w-full justify-start"
-              onClick={() => setActiveModule('iandina')}
-            >
-              <Brain className="w-4 h-4 mr-2" />
-              IAndina
-            </Button>
-            
-            <Button
-              variant={activeModule === 'project-maker' ? 'default' : 'ghost'}
-              className="w-full justify-start"
-              onClick={() => setActiveModule('project-maker')}
-            >
-              <Lightbulb className="w-4 h-4 mr-2" />
-              Project Maker
-            </Button>
-            
-            <Button
-              variant={activeModule === 'digest' ? 'default' : 'ghost'}
-              className="w-full justify-start"
-              onClick={() => setActiveModule('digest')}
-            >
-              <FileText className="w-4 h-4 mr-2" />
-              MRA Digest
-            </Button>
+            <div className="pt-2">
+              <h3 className="px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Análisis y Proyectos</h3>
+              <div className="mt-1 space-y-1">
+                <Button variant={activeModule === 'iandina' ? 'secondary' : 'ghost'} className="w-full justify-start" onClick={() => setActiveModule('iandina')}>
+                  <Brain className="w-4 h-4 mr-2" /> IAndina
+                </Button>
+                <Button variant={activeModule === 'project-maker' ? 'secondary' : 'ghost'} className="w-full justify-start" onClick={() => setActiveModule('project-maker')}>
+                  <Lightbulb className="w-4 h-4 mr-2" /> Project Maker
+                </Button>
+                <Button variant={activeModule === 'digest' ? 'secondary' : 'ghost'} className="w-full justify-start" onClick={() => setActiveModule('digest')}>
+                  <FileText className="w-4 h-4 mr-2" /> MRA Digest
+                </Button>
+                <Button variant={activeModule === 'project-tracking' ? 'secondary' : 'ghost'} className="w-full justify-start" onClick={() => setActiveModule('project-tracking')}>
+                  <ListChecks className="w-4 h-4 mr-2" /> Seguimiento
+                </Button>
+                <Button variant={activeModule === 'advanced-reports' ? 'secondary' : 'ghost'} className="w-full justify-start" onClick={() => setActiveModule('advanced-reports')}>
+                  <AreaChart className="w-4 h-4 mr-2" /> Reportería
+                </Button>
+              </div>
+            </div>
+
+            <div className="pt-2">
+              <h3 className="px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Gestión y Comunidad</h3>
+              <div className="mt-1 space-y-1">
+                <Button variant={activeModule === 'user-management' ? 'secondary' : 'ghost'} className="w-full justify-start" onClick={() => setActiveModule('user-management')}>
+                  <Users className="w-4 h-4 mr-2" /> Usuarios
+                </Button>
+                <Button variant={activeModule === 'institutional-validation' ? 'secondary' : 'ghost'} className="w-full justify-start" onClick={() => setActiveModule('institutional-validation')}>
+                  <Building className="w-4 h-4 mr-2" /> Validación
+                </Button>
+                <Button variant={activeModule === 'collaboration' ? 'secondary' : 'ghost'} className="w-full justify-start" onClick={() => setActiveModule('collaboration')}>
+                  <Handshake className="w-4 h-4 mr-2" /> Colaboración
+                </Button>
+              </div>
+            </div>
+
+            <div className="pt-2">
+              <h3 className="px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Plataforma y Negocio</h3>
+              <div className="mt-1 space-y-1">
+                <Button variant={activeModule === 'sponsorship' ? 'secondary' : 'ghost'} className="w-full justify-start" onClick={() => setActiveModule('sponsorship')}>
+                  <DollarSign className="w-4 h-4 mr-2" /> Patrocinios
+                </Button>
+                <Button variant={activeModule === 'freemium' ? 'secondary' : 'ghost'} className="w-full justify-start" onClick={() => setActiveModule('freemium')}>
+                  <Gem className="w-4 h-4 mr-2" /> Freemium
+                </Button>
+                <Button variant={activeModule === 'data-integration' ? 'secondary' : 'ghost'} className="w-full justify-start" onClick={() => setActiveModule('data-integration')}>
+                  <Database className="w-4 h-4 mr-2" /> Integración
+                </Button>
+              </div>
+            </div>
           </nav>
         </aside>
 
