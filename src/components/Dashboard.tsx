@@ -18,8 +18,16 @@ import { useAuth } from "@/hooks/useAuth";
 import { IAndinaModule } from "./modules/IAndinaModule";
 import { ProjectMakerModule } from "./modules/ProjectMakerModule";
 import { DigestModule } from "./modules/DigestModule";
+import { UserManagementModule } from "./modules/UserManagementModule";
+import { SponsorshipModule } from "./modules/SponsorshipModule";
+import { FreemiumModule } from "./modules/FreemiumModule";
+import { DataIntegrationModule } from "./modules/DataIntegrationModule";
+import { ProjectTrackingModule } from "./modules/ProjectTrackingModule";
+import { InstitutionalValidationModule } from "./modules/InstitutionalValidationModule";
+import { CollaborationModule } from "./modules/CollaborationModule";
+import { AdvancedReportsModule } from "./modules/AdvancedReportsModule";
 
-type ActiveModule = 'dashboard' | 'iandina' | 'project-maker' | 'digest';
+type ActiveModule = 'dashboard' | 'iandina' | 'project-maker' | 'digest' | 'users' | 'sponsors' | 'freemium' | 'integration' | 'tracking' | 'validation' | 'collaboration' | 'reports';
 
 export const Dashboard = () => {
   const { user, logout } = useAuth();
@@ -42,6 +50,22 @@ export const Dashboard = () => {
         return <ProjectMakerModule />;
       case 'digest':
         return <DigestModule />;
+      case 'users':
+        return <UserManagementModule />;
+      case 'sponsors':
+        return <SponsorshipModule />;
+      case 'freemium':
+        return <FreemiumModule />;
+      case 'integration':
+        return <DataIntegrationModule />;
+      case 'tracking':
+        return <ProjectTrackingModule />;
+      case 'validation':
+        return <InstitutionalValidationModule />;
+      case 'collaboration':
+        return <CollaborationModule />;
+      case 'reports':
+        return <AdvancedReportsModule />;
       default:
         return <DashboardHome />;
     }
